@@ -1,32 +1,31 @@
 import gym
+import numpy as np
+import matplotlib.pyplot as plt
 
 env = gym.make('FrozenLake-v0')
 
-for iteration in range(1):
+NUMBER_OF_GAMES = 1000
+win_percentage = []
+scores = []
+
+for i in range(NUMBER_OF_GAMES):
   observation = env.reset()
 
-  finished = False
-  count = 0
-  while finished is False:
-    count += 1
+  done = False
+  score = 0
 
-    env.render()
-
+  while not done:
     action = env.action_space.sample()
-
     observation, reward, done, info = env.step(action)
+    score += reward
 
-    # print('====observation====')
-    # print(observation)
-    # print('====reward====')
-    # print(reward)
-    # print('====done====')
-    # print(done)
-    # print('====info====')
-    # print(info)
+  scores.append(score)
 
-    finished = done
+  if i % 10 == 0:
+    average = np.mean(scores[-10:])
+    win_percentage.append(average)
 
-  print(f'Attempt #{iteration + 1}, Steps taken until done: {count}')
+plt.plot(win_percentage)
+plt.show()
 
 env.close()
